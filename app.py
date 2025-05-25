@@ -8,9 +8,7 @@ import numpy as np
 import datetime
 import mplfinance as mpf
 
-
 def yoy_pct(current, previous):
-
     if previous == 0 or pd.isna(previous):
         return np.nan
     return (current - previous) / abs(previous) * 100
@@ -56,24 +54,39 @@ else:
         data = yf.download(selected_ticker, start=start_date, end=end_date)
         if data is not None and not data.empty:
             data.columns = data.columns.get_level_values(0)
-            st.write("")
-            st.success("***NOTE:** The currency will be adjusted to match the denomination of the security.")
-
-            # Fetch analyst price targets
             ticker = yf.Ticker(selected_ticker)  # Create yf.Ticker instance here
             price_tg = ticker.analyst_price_targets
+            name = ticker.info.get('longName')
+            currency = ticker.info.get('currency')
+            industry = ticker.info.get('industry')
+            sector = ticker.info.get('sector')
+
+            st.write("")
+            st.success(f"***NOTE:** The currency will be adjusted to match the denomination of the security. ({currency})")
+
+            st.divider()
+            
+            st.markdown(f"## ⭐ {name} ({ticker_input})")
+            st.write(f"➡️ **Sector**: {sector}")
+            st.write(f"➡️ **Industry**: {industry}")
+            with st.expander(f"About the company"):
+                st.write(ticker.info.get("longBusinessSummary"))
+
+            # Fetch analyst price targets
+
             diff = round(((price_tg['median']-price_tg['current'])/price_tg['current']*100),2)
             color_text = "red" if price_tg["current"] > price_tg["median"] else "green"
             signal_text = "Sell" if price_tg["current"] > price_tg["median"] else "Buy"
             
+
             st.divider()  
-            st.markdown(f"### 💰Price ({ticker_input})")          
+            st.markdown(f"### 💰Price ({currency})")          
             st.markdown(
                 f"""
                 <div>
-                    <p><strong>> Current Price: </strong> {round(price_tg['current'],2)}</p>
-                    <p><strong>> Target Price: </strong> {round(price_tg['median'],2)}</p>
-                    <p><strong>> Price Differential: </strong> {diff}% 
+                    <p><strong>➡️ Current Price: </strong> {round(price_tg['current'],2):,.2f}</p>
+                    <p><strong>➡️ Target Price: </strong> {round(price_tg['median'],2):,.2f}</p>
+                    <p><strong>➡️ Price Differential: </strong> {diff}% 
                         <span style='color:{color_text};'><strong>({signal_text})</strong></span></p>
                     
                 </div>
@@ -221,12 +234,17 @@ if selected_ticker: # Check if ticker is not empty
             eps = info.get("trailingEps")      # EPS (Trailing 12 months)
             peg = info.get("pegRatio")         # PEG ratio
             debt_equity = info.get("debtToEquity")  # Debt to Equity ratio
+            fcf = info.get("freeCashflow")
+            shares_outstanding = info.get("sharesOutstanding")
+            fcfps = fcf / shares_outstanding
 
             st.write("")
-            st.write(f"**EPS (TTM):** {to_round(info.get('trailingEps'))}")
-            st.write(f"**PEG Ratio:** {to_round(info.get('pegRatio'))}")
-            st.write(f"**Debt to Equity:** {to_round(info.get('debtToEquity'))}")
-            st.write(f"**Price to Book:** {to_round(info.get('priceToBook'))}")
+            st.write(f"➡️ **EPS (TTM):** {to_round(info.get('trailingEps'))}")
+            st.write(f"➡️ **PEG Ratio:** {to_round(info.get('pegRatio'))}")
+            st.write(f"➡️ **Debt to Equity:** {to_round(info.get('debtToEquity'))}")
+            st.write(f"➡️ **Price to Book:** {to_round(info.get('priceToBook'))}")
+            st.write(f"➡️ **Free Cash Flow per Share:** {round(fcfps,2)}")
+            st.write(f"➡️ **ROE**: {round(info.get('returnOnEquity')*100,2)}%")
             st.write("")
 
             st.write("##### **Revenue and Income** (Last 4 Year)")
