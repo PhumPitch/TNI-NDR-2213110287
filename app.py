@@ -177,8 +177,7 @@ else:
             ### Plotting
             st.pyplot(fig)          
             
-            df_download = yf.download(ticker_input, start=start_date, end=end_date)               
-            csv = df_download.to_csv().encode('utf-8')
+            df_download = yf.download(ticker_input, start=start_date, end=end_date)
             st.write("")
             if not df_download.empty:
                 csv = df_download.to_csv().encode('utf-8')
@@ -239,11 +238,11 @@ if selected_ticker: # Check if ticker is not empty
             fcfps = fcf / shares_outstanding
 
             st.write("")
-            st.write(f"➡️ **EPS (TTM):** {to_round(info.get('trailingEps'))}")
+            st.write(f"➡️ **EPS (TTM):** {to_round(info.get('trailingEps')):,.2f}")
             st.write(f"➡️ **PEG Ratio:** {to_round(info.get('pegRatio'))}")
-            st.write(f"➡️ **Debt to Equity:** {to_round(info.get('debtToEquity'))}")
-            st.write(f"➡️ **Price to Book:** {to_round(info.get('priceToBook'))}")
-            st.write(f"➡️ **Free Cash Flow per Share:** {round(fcfps,2)}")
+            st.write(f"➡️ **Debt to Equity (mrq):** {to_round(info.get('debtToEquity')/100):,.2f}")
+            st.write(f"➡️ **Price to Book:** {to_round(info.get('priceToBook')):,.2f}")
+            st.write(f"➡️ **Free Cash Flow per Share:** {round(fcfps,2):,.2f}")
             st.write(f"➡️ **ROE**: {round(info.get('returnOnEquity')*100,2)}%")
             st.write("")
 

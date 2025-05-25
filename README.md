@@ -2,6 +2,7 @@
 using Python to fetch price and revenue
 
 ### Features
+- Company Infomation
 - Target Price
 - Technical Analysis (Chart) - EMA(20,50), MA(200) and Volumes
 - Historical Price Download
