@@ -197,7 +197,7 @@ else:
             st.caption(f" * **Fair value** is determined by the price at which an asset is bought or sold when both the buyer and seller freely agree on the price.")
 
             st.divider()    
-            st.markdown("### 🪙Fundamental Index (Million)")
+            st.markdown("### 🪙Fundamental Index")
 
         else:
             st.warning("No data found for the selected ticker.")
@@ -246,7 +246,7 @@ if selected_ticker: # Check if ticker is not empty
             st.write(f"➡️ **ROE**: {round(info.get('returnOnEquity')*100,2)}%")
             st.write("")
 
-            st.write("##### **Revenue and Income** (Last 4 Year)")
+            st.write("##### **Revenue and Income** (Last 4 Year)- (Million)")
             st.dataframe(df.drop(columns=["Prev Revenue", "Prev Net Income"]).tail(4))
 
     except Exception as e:
