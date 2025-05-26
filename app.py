@@ -55,7 +55,8 @@ else:
         if data is not None and not data.empty:
             data.columns = data.columns.get_level_values(0)
             ticker = yf.Ticker(selected_ticker)  # Create yf.Ticker instance here
-            price_tg = ticker.analyst_price_targets
+            price_tg = ticker.info.get('targetMedianPrice')
+            
             name = ticker.info.get('longName')
             currency = ticker.info.get('currency')
             industry = ticker.info.get('industry')
