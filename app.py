@@ -56,6 +56,7 @@ else:
             data.columns = data.columns.get_level_values(0)
             ticker = yf.Ticker(selected_ticker)  # Create yf.Ticker instance here
             price_tg = ticker.info.get('targetMedianPrice')
+            price_cr = ticker.info.get('currentPrice')
             
             name = ticker.info.get('longName')
             currency = ticker.info.get('currency')
@@ -75,9 +76,9 @@ else:
 
             # Fetch analyst price targets
 
-            diff = round(((price_tg['median']-price_tg['current'])/price_tg['current']*100),2)
-            color_text = "red" if price_tg["current"] > price_tg["median"] else "green"
-            signal_text = "Sell" if price_tg["current"] > price_tg["median"] else "Buy"
+            diff = round(((price_tg-price_cr)/price_cr*100),2)
+            color_text = "red" if price_cr > price_tg else "green"
+            signal_text = "Sell" if price_cr > price_tg else "Buy"
             
 
             st.divider()  
@@ -85,8 +86,8 @@ else:
             st.markdown(
                 f"""
                 <div>
-                    <p><strong>➡️ Current Price: </strong> {round(price_tg['current'],2):,.2f}</p>
-                    <p><strong>➡️ Target Price: </strong> {round(price_tg['median'],2):,.2f}</p>
+                    <p><strong>➡️ Current Price: </strong> {round(price_cr,2):,.2f}</p>
+                    <p><strong>➡️ Target Price: </strong> {round(price_tg,2):,.2f}</p>
                     <p><strong>➡️ Price Differential: </strong> {diff}% 
                         <span style='color:{color_text};'><strong>({signal_text})</strong></span></p>
                     
