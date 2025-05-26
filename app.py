@@ -103,8 +103,8 @@ else:
             ema20 = mpf.make_addplot(data["EMA20"], color="blue", label="EMA20", alpha = 0.5)
             ema50 = mpf.make_addplot(data["EMA50"], color="red", label="EMA50", alpha = 0.5)
 
-            if 'median' in price_tg:
-                fair_value = price_tg['median']
+            if price_tg is not None:
+                fair_value = price_tg
                 fair_line = mpf.make_addplot([fair_value] * len(data), color='green', linestyle='--', label="Fair Value")
 
             else:
