@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import datetime
 import mplfinance as mpf
-import curl_cffi.requests as requests
 
 def yoy_pct(current, previous):
     if previous == 0 or pd.isna(previous):
@@ -33,6 +32,7 @@ st.title("🔎 Security Analysis")
 # Input for the stock ticker
 ticker_input = st.text_input("Enter ticker Here ⬇️", "").upper()
 
+
 # Button to trigger the search and analysis
 if st.button("Search"):
     st.session_state.selected_ticker = ticker_input
@@ -56,13 +56,14 @@ else:
         if data is not None and not data.empty:
             data.columns = data.columns.get_level_values(0)
             ticker = yf.Ticker(selected_ticker)  # Create yf.Ticker instance here
-            price_tg = ticker.info.get('targetMedianPrice')
-            price_cr = ticker.info.get('currentPrice')
+            info = ticker.info
+            price_tg = info.get('targetMedianPrice')
+            price_cr = info.get('currentPrice')
             
-            name = ticker.info.get('longName')
-            currency = ticker.info.get('currency')
-            industry = ticker.info.get('industry')
-            sector = ticker.info.get('sector')
+            name = info.get('longName')
+            currency = info.get('currency')
+            industry = info.get('industry')
+            sector = info.get('sector')
 
             st.write("")
             st.success(f"***NOTE:** The currency will be adjusted to match the denomination of the security. ({currency})")
@@ -73,7 +74,7 @@ else:
             st.write(f"➡️ **Sector**: {sector}")
             st.write(f"➡️ **Industry**: {industry}")
             with st.expander(f"About the company"):
-                st.write(ticker.info.get("longBusinessSummary"))
+                st.write(info.get("longBusinessSummary"))
 
             # Fetch analyst price targets
 
@@ -94,9 +95,8 @@ else:
                     
                 </div>
                 """,
-                unsafe_allow_html=True)             
-            df_download = yf.download(ticker_input, start=start_date, end=end_date)
-
+                unsafe_allow_html=True)        
+            
             # Calculate EMAs
             data["EMA20"] = data["Close"].ewm(span=20, adjust=False).mean()
             data["EMA50"] = data["Close"].ewm(span=50, adjust=False).mean()
