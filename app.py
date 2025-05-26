@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import mplfinance as mpf
+import curl_cffi.requests as requests
 
 def yoy_pct(current, previous):
     if previous == 0 or pd.isna(previous):
